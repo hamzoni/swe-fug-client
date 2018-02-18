@@ -13,13 +13,33 @@ import java.util.ArrayList;
 
 public class UserDAL extends DAL<User> {
 
-    public UserDAL() {
+    // Commands
+    private int cmd = -1;
+    public static final int CMD_LOGIN = 0;
+
+    public UserDAL(int cmd) {
+        this.cmd = cmd;
     }
+
+    // Requests
 
     @Override
-    protected void setView(Object object) {
+    public void makeRequest(Object object) {
+        switch (cmd) {
+            case CMD_LOGIN:
+
+                break;
+        }
+    }
+
+    // Responses
+
+    @Override
+    public void makeResponse(Object object) {
 
     }
+
+    // Others
 
     @Override
     protected User parseJson(JSONObject object) {

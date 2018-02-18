@@ -17,22 +17,34 @@ import java.util.ArrayList;
 
 public class TripDAL extends DAL<Trip> {
 
+    // Command
+
     private View root;
 
     public TripDAL(View root) {
         this.root = root;
     }
 
+    // Requests
+    @Override
+    public void makeRequest(Object object) {
+
+    }
+
     public void listAll() throws Exception {
         new DataCaller(this).execute(SERVER_NAME);
     }
 
+    // Responses
+
     @Override
-    protected void setView(Object object) {
+    public void makeResponse(Object object) {
         ArrayList<Trip> trips = parseJsonList((ArrayList<JSONObject>) object);
         GridView gridView = root.findViewById(R.id.ctn_trip_list);
         gridView.setAdapter(new PassengerRecordAdapter(root, trips));
     }
+
+    // Others
 
     public Trip parseJson (JSONObject item) {
         Trip trip = null;

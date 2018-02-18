@@ -30,6 +30,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.taquy.finalproject.API.UserDAL;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +62,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     }
 
     private void actionSubmit() {
-
+        JSONObject json = new JSONObject();
+        try {
+            json.put("login", ipt_login.getText().toString());
+            json.put("password", ipt_pwd.getText().toString());
+            new UserDAL(UserDAL.CMD_LOGIN).makeRequest(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void actionRegister() {

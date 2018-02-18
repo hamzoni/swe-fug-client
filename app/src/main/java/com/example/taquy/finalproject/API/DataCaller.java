@@ -20,11 +20,23 @@ import java.util.ArrayList;
 
 public class DataCaller extends AsyncTask<String, Void, String> {
     private Exception exception;
+
+    public static final int SINGLE_DATA = 0;
+    public static final int MULTIPLE_DATA = 1;
+
+    private int requestType;
     private DAL dal;
 
     public DataCaller(DAL dal) {
         this.dal = dal;
+        this.requestType = MULTIPLE_DATA;
     }
+
+    public DataCaller(DAL dal, int requestType) {
+        this.dal = dal;
+        this.requestType = requestType;
+    }
+
 
     protected String doInBackground(String... urls)  {
         HttpURLConnection con = null;
@@ -56,6 +68,27 @@ public class DataCaller extends AsyncTask<String, Void, String> {
     }
 
     protected void onPostExecute(String json) {
+        switch (requestType) {
+            case MULTIPLE_DATA:
+                dal.makeResponse(parseMultiple(json));
+                break;
+            case SINGLE_DATA:
+                dal.makeResponse(parseSingle(json));
+                break;
+        }
+
+    }
+
+    private Object parseSingle(String json) {
+        try {
+            return new JSONObject(json);
+        } catch (Exception e) {
+            Log.e(Log.ERROR + "", e.getMessage());
+        }
+        return null;
+    }
+
+    private Object parseMultiple(String json) {
         try {
             JSONArray list = new JSONArray(json);
             ArrayList<JSONObject> objects = new ArrayList<>();
@@ -65,9 +98,10 @@ public class DataCaller extends AsyncTask<String, Void, String> {
                 objects.add(item);
             }
 
-            dal.setView(objects);
+            return objects;
         } catch (Exception e) {
-            this.exception = e;
+            Log.e(Log.ERROR + "", e.getMessage());
         }
+        return null;
     }
 }
