@@ -51,7 +51,7 @@ public class PassengerFragment extends Fragment {
             Authentication auth = new Authentication(ctx);
             User user = auth.retrieve();
 
-            new TripDAL(root, TripDAL.CMD_ALL_TRIPS).makeRequest(null);
+            new TripDAL(root, TripDAL.CMD_PASSENGER_TRIPS).makeRequest(null);
 
         } catch (Exception e) {
             e.printStackTrace();

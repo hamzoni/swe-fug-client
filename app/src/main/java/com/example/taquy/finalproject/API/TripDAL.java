@@ -1,8 +1,10 @@
 package com.example.taquy.finalproject.API;
 
+import android.util.Log;
 import android.widget.GridView;
 
 import com.example.taquy.finalproject.Entities.Trip;
+import com.example.taquy.finalproject.Misc.Debugger;
 import com.example.taquy.finalproject.Misc.Tool;
 import com.example.taquy.finalproject.R;
 import com.example.taquy.finalproject.Adapters.PassengerRecordAdapter;
@@ -14,8 +16,8 @@ import java.util.ArrayList;
 public class TripDAL extends DAL<Trip> {
     private String uri = SERVER_NAME + "trip/";
 
-    public static final int CMD_DRIVER_TRIPS = 0;
-    public static final int CMD_PASSENGER_TRIPS = 1;
+    public static final int CMD_DRIVER_TRIPS = 0;       // Filter User Owned trips
+    public static final int CMD_PASSENGER_TRIPS = 1;    // Filter OPENDED trips
     public static final int CMD_ALL_TRIPS = 2;
 
     // Command
@@ -24,31 +26,48 @@ public class TripDAL extends DAL<Trip> {
         super(args);
     }
 
+    private Object requestVal;
+    private Object responseVal;
     // Requests
     @Override
     public void makeRequest(Object object) {
+        this.requestVal = object;
+        String requestUrl = "";
+        String requestData = "";
         switch (cmd) {
             case CMD_ALL_TRIPS:
-                new Axios(this, Axios.MULTIPLE_DATA).execute(uri);
+                requestUrl = uri;
+                new Axios(this, Axios.MULTIPLE_DATA).execute(requestUrl);
                 break;
             case CMD_DRIVER_TRIPS:
-
+                requestUrl = uri + "driver";
+                new Axios(this, Axios.MULTIPLE_DATA).execute(requestUrl);
                 break;
             case CMD_PASSENGER_TRIPS:
-
+                requestUrl = uri + "passenger";
+                new Axios(this, Axios.MULTIPLE_DATA).execute(requestUrl);
                 break;
         }
+        Debugger.log(this.getClass(), 51, requestUrl);
     }
 
     // Responses
 
     @Override
     public void makeResponse(Object object) {
+        this.responseVal = object;
         if (object == null) return;
-        ArrayList<JSONObject> objects = (ArrayList<JSONObject>) object;
-        ArrayList<Trip> trips = parseJsonList((ArrayList<JSONObject>) object);
-        GridView gridView = root.findViewById(R.id.ctn_trip_list);
-        gridView.setAdapter(new PassengerRecordAdapter(root, trips));
+        Debugger.log(this.getClass(), 51, requestUrl);
+        switch (cmd) {
+            case CMD_ALL_TRIPS:
+            case CMD_DRIVER_TRIPS:
+            case CMD_PASSENGER_TRIPS:
+                ArrayList<JSONObject> objects = (ArrayList<JSONObject>) object;
+                ArrayList<Trip> trips = parseJsonList((ArrayList<JSONObject>) object);
+                GridView gridView = root.findViewById(R.id.ctn_trip_list);
+                gridView.setAdapter(new PassengerRecordAdapter(root, trips));
+                break;
+        }
     }
 
     // Others
