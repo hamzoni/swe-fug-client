@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.GridView;
 
+import com.example.taquy.finalproject.Misc.Debugger;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,29 +70,39 @@ public class Axios extends AsyncTask<String, Void, String> {
 
     protected String doInBackground(String... params)  {
         URL url = null; // here is your URL path
-
+        HttpURLConnection conn = null;
         try {
             url = new URL(params[0]);
+            Debugger.log(params[0]);
+            Debugger.log(methods[requestMethod] + " " + requestMethod);
 
             JSONObject json = null;
             if (params.length > 1) json = new JSONObject(params[1]);
 
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(15000);
             conn.setConnectTimeout(15000);
             conn.setRequestMethod(methods[requestMethod]);
             conn.setDoInput(true);
-            conn.setDoOutput(true);
 
-            OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-            writer.write(queryBuilder(json));
+            if (requestMethod != Axios.GET) {
+                conn.setDoOutput(true);
 
-            writer.flush();
-            writer.close();
-            os.close();
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                writer.write(queryBuilder(json));
+
+                writer.flush();
+                writer.close();
+                os.close();
+            } else {
+                conn.setDoOutput(false);
+            }
+
+            conn.connect();
 
             int responseCode = conn.getResponseCode();
+            Debugger.log("Response Code: " + responseCode);
             if (responseCode == HttpsURLConnection.HTTP_OK) {
                 InputStreamReader is = new InputStreamReader(conn.getInputStream());
                 BufferedReader in = new BufferedReader(is);
@@ -104,10 +116,16 @@ public class Axios extends AsyncTask<String, Void, String> {
                 }
 
                 in.close();
+                is.close();
+
+                Debugger.log("got here");
                 return sb.toString();
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (conn != null)
+                conn.disconnect();
         }
         return null;
     }
@@ -158,6 +176,7 @@ public class Axios extends AsyncTask<String, Void, String> {
     }
 
     private Object parseMultiple(String json) {
+        Debugger.log(json);
         if (json == null) return null;
         try {
             ArrayList<JSONObject> items = new ArrayList<>();

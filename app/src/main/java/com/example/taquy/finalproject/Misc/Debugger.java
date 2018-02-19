@@ -11,6 +11,6 @@ public class Debugger {
         StackTraceElement trace = Thread.currentThread().getStackTrace()[3]; // parent trace
         String fn = trace.getFileName();
         int line = trace.getLineNumber();
-        Log.e("0==|======> (" + fn + ":" + line + ")", msg.toString());
+        Log.e("0==|======> (" + fn + ":" + line + ")", msg + "");
     }
 }
