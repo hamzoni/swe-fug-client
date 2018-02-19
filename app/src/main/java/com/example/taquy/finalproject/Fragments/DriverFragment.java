@@ -47,11 +47,7 @@ public class DriverFragment extends Fragment {
     }
 
     private void loadData() {
-        try {
-            new TripDAL(root).listAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     class BtnCreateTrip implements View.OnClickListener {

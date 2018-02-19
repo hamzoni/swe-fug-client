@@ -9,8 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.taquy.finalproject.API.TripDAL;
+import com.example.taquy.finalproject.Entities.User;
+import com.example.taquy.finalproject.Misc.Authentication;
 import com.example.taquy.finalproject.R;
 
 public class PassengerFragment extends Fragment {
@@ -45,7 +48,11 @@ public class PassengerFragment extends Fragment {
 
     private void loadData() {
         try {
-            new TripDAL(root).listAll();
+            Authentication auth = new Authentication(ctx);
+            User user = auth.retrieve();
+
+            new TripDAL(root, TripDAL.CMD_ALL_TRIPS).makeRequest(null);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

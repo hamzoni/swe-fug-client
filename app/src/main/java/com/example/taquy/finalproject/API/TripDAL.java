@@ -7,22 +7,25 @@ import android.widget.GridView;
 import com.example.taquy.finalproject.Entities.Trip;
 import com.example.taquy.finalproject.Misc.Tool;
 import com.example.taquy.finalproject.R;
-import com.example.taquy.finalproject.Views.DriverRecordAdapter;
 import com.example.taquy.finalproject.Views.PassengerRecordAdapter;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class TripDAL extends DAL<Trip> {
+    private String uri = SERVER_NAME + "trip/";
+
+    private int cmd = -1;
+
+    public static final int CMD_DRIVER_TRIPS = 0;
+    public static final int CMD_PASSENGER_TRIPS = 1;
+    public static final int CMD_ALL_TRIPS = 2;
 
     // Command
 
-    private View root;
-
-    public TripDAL(View root) {
-        this.root = root;
+    public TripDAL(Object... args) {
+        super(args);
     }
 
     // Requests
@@ -32,7 +35,7 @@ public class TripDAL extends DAL<Trip> {
     }
 
     public void listAll() throws Exception {
-        new DataCaller(this).execute(SERVER_NAME);
+        new Axios(this).execute(uri);
     }
 
     // Responses
@@ -68,13 +71,13 @@ public class TripDAL extends DAL<Trip> {
                 double price = Double.parseDouble(item.getString("price"));
                 trip.setPrice(price);
             } catch (Exception e) {
-                Log.e(Log.ERROR + "", e.getMessage());
+                e.printStackTrace();
             }
 
             trip.setStatus(item.getInt("status"));
             trip.setTime(Tool.stringToDate(item.getString("time")));
         } catch (Exception e) {
-            Log.e(Log.ERROR + "", e.getMessage());
+            e.printStackTrace();
         }
         return trip;
     }

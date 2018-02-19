@@ -47,6 +47,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private Button btn_submit;
     private Button btn_register;
 
+    private View root;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,14 +61,20 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         btn_submit.setOnClickListener(this);
         btn_register.setOnClickListener(this);
+
+        root = getWindow().getDecorView().getRootView();
+
+        // testing
+        ipt_login.setText("doyle.leola@example.net");
+        ipt_pwd.setText("secret");
     }
 
     private void actionSubmit() {
         JSONObject json = new JSONObject();
         try {
             json.put("login", ipt_login.getText().toString());
-            json.put("password", ipt_pwd.getText().toString());
-            new UserDAL(UserDAL.CMD_LOGIN).makeRequest(json);
+            json.put("pwd", ipt_pwd.getText().toString());
+            new UserDAL(root, UserDAL.CMD_LOGIN).makeRequest(json.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
