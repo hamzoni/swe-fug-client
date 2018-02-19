@@ -8,6 +8,7 @@ public class User {
     private String phone;
     private String brand;
     private String plate;
+    private String password;
 
     public User() {
         id = -1;
@@ -72,5 +73,13 @@ public class User {
 
     public void setPlate(String plate) {
         this.plate = plate;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

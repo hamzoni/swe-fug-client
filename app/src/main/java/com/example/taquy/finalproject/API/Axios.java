@@ -73,8 +73,6 @@ public class Axios extends AsyncTask<String, Void, String> {
         HttpURLConnection conn = null;
         try {
             url = new URL(params[0]);
-            Debugger.log(params[0]);
-            Debugger.log(methods[requestMethod] + " " + requestMethod);
 
             JSONObject json = null;
             if (params.length > 1) json = new JSONObject(params[1]);
@@ -102,7 +100,6 @@ public class Axios extends AsyncTask<String, Void, String> {
             conn.connect();
 
             int responseCode = conn.getResponseCode();
-            Debugger.log("Response Code: " + responseCode);
             if (responseCode == HttpsURLConnection.HTTP_OK) {
                 InputStreamReader is = new InputStreamReader(conn.getInputStream());
                 BufferedReader in = new BufferedReader(is);
@@ -118,7 +115,6 @@ public class Axios extends AsyncTask<String, Void, String> {
                 in.close();
                 is.close();
 
-                Debugger.log("got here");
                 return sb.toString();
             }
         } catch (Exception e) {
@@ -176,7 +172,6 @@ public class Axios extends AsyncTask<String, Void, String> {
     }
 
     private Object parseMultiple(String json) {
-        Debugger.log(json);
         if (json == null) return null;
         try {
             ArrayList<JSONObject> items = new ArrayList<>();

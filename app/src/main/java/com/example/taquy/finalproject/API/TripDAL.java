@@ -41,14 +41,13 @@ public class TripDAL extends DAL<Trip> {
                 break;
             case CMD_DRIVER_TRIPS:
                 requestUrl = uri + "driver";
-                new Axios(this, Axios.MULTIPLE_DATA).execute(requestUrl);
+                new Axios(this, Axios.MULTIPLE_DATA, Axios.POST).execute(requestUrl, (String) object);
                 break;
             case CMD_PASSENGER_TRIPS:
                 requestUrl = uri + "passenger";
                 new Axios(this, Axios.MULTIPLE_DATA).execute(requestUrl);
                 break;
         }
-        Debugger.log(requestUrl);
     }
 
     // Responses
@@ -57,7 +56,6 @@ public class TripDAL extends DAL<Trip> {
     public void makeResponse(Object object) {
         this.responseVal = object;
         if (object == null) return;
-        Debugger.log("got here");
         switch (cmd) {
             case CMD_ALL_TRIPS:
             case CMD_DRIVER_TRIPS:

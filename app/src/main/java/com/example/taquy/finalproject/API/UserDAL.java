@@ -97,6 +97,14 @@ public class UserDAL extends DAL<User> {
             Toast.makeText(ctx, "Wrong username or password", Toast.LENGTH_LONG).show();
             return;
         }
+
+        try {
+            JSONObject json = new JSONObject((String) this.requestVal);
+            user.setPassword(json.getString("pwd"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         Authentication auth = new Authentication(ctx);
         auth.store(user);
 

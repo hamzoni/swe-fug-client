@@ -3,6 +3,7 @@ package com.example.taquy.finalproject.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,13 @@ import android.widget.Button;
 import android.widget.GridView;
 
 import com.example.taquy.finalproject.API.TripDAL;
+import com.example.taquy.finalproject.Entities.User;
+import com.example.taquy.finalproject.Misc.Authentication;
+import com.example.taquy.finalproject.Misc.Debugger;
 import com.example.taquy.finalproject.R;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 public class DriverFragment extends Fragment {
 
@@ -47,7 +54,20 @@ public class DriverFragment extends Fragment {
     }
 
     private void loadData() {
+        try {
+            Authentication auth = new Authentication(ctx);
 
+            if (!auth.isAuth()) return;
+            User user = auth.retrieve();
+
+            JSONObject params = new JSONObject();
+            params.put("email", user.getEmail());
+            params.put("pwd", user.getPassword());
+            new TripDAL(root, TripDAL.CMD_DRIVER_TRIPS).makeRequest(params.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     class BtnCreateTrip implements View.OnClickListener {
