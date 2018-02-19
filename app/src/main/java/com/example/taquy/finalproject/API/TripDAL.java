@@ -1,13 +1,11 @@
 package com.example.taquy.finalproject.API;
 
-import android.util.Log;
-import android.view.View;
 import android.widget.GridView;
 
 import com.example.taquy.finalproject.Entities.Trip;
 import com.example.taquy.finalproject.Misc.Tool;
 import com.example.taquy.finalproject.R;
-import com.example.taquy.finalproject.Views.PassengerRecordAdapter;
+import com.example.taquy.finalproject.Adapters.PassengerRecordAdapter;
 
 import org.json.JSONObject;
 

@@ -1,4 +1,4 @@
-package com.example.taquy.finalproject.Views;
+package com.example.taquy.finalproject.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,8 +12,6 @@ import com.example.taquy.finalproject.Entities.Trip;
 import com.example.taquy.finalproject.Entities.User;
 import com.example.taquy.finalproject.Misc.Tool;
 import com.example.taquy.finalproject.R;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;

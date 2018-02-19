@@ -1,4 +1,4 @@
-package com.example.taquy.finalproject.Views;
+package com.example.taquy.finalproject.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
