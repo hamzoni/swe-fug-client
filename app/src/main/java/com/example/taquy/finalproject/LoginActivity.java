@@ -64,9 +64,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         root = getWindow().getDecorView().getRootView();
 
+//        development();
+    }
+
+    private void development() {
         // testing
         ipt_login.setText("doyle.leola@example.net");
         ipt_pwd.setText("secret");
+        this.actionSubmit();
     }
 
     private void actionSubmit() {

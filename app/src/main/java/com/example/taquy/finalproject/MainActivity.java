@@ -1,5 +1,6 @@
 package com.example.taquy.finalproject;
 
+import android.content.ClipData;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,7 @@ import com.example.taquy.finalproject.Fragments.DriverFragment;
 import com.example.taquy.finalproject.Fragments.HistoryFragment;
 import com.example.taquy.finalproject.Fragments.PassengerFragment;
 import com.example.taquy.finalproject.Fragments.ProfileFragment;
+import com.example.taquy.finalproject.Misc.Authentication;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,8 +42,13 @@ public class MainActivity extends AppCompatActivity {
 
         viewer.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewer));
-    }
 
+        // auto logout if no session available
+        Authentication auth = new Authentication(this);
+        if (auth.isAuth()) {
+
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -51,10 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) return true;
-
+        switch (item.getItemId()) {
+            case R.id.action_logout:
+                Authentication auth = new Authentication(this);
+                auth.logout();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
