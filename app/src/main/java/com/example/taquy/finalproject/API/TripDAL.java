@@ -48,7 +48,7 @@ public class TripDAL extends DAL<Trip> {
                 new Axios(this, Axios.MULTIPLE_DATA).execute(requestUrl);
                 break;
         }
-        Debugger.log(this.getClass(), 51, requestUrl);
+        Debugger.log(requestUrl);
     }
 
     // Responses
@@ -57,7 +57,7 @@ public class TripDAL extends DAL<Trip> {
     public void makeResponse(Object object) {
         this.responseVal = object;
         if (object == null) return;
-        Debugger.log(this.getClass(), 51, requestUrl);
+//        Debugger.log(this.getClass(), 51, requestUrl);
         switch (cmd) {
             case CMD_ALL_TRIPS:
             case CMD_DRIVER_TRIPS:
