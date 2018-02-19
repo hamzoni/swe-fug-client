@@ -7,10 +7,10 @@ import android.util.Log;
  */
 
 public class Debugger {
-    public static void log(String msg) {
+    public static void log(Object msg) {
         StackTraceElement trace = Thread.currentThread().getStackTrace()[3]; // parent trace
         String fn = trace.getFileName();
         int line = trace.getLineNumber();
-        Log.e("0==|======> (" + fn + ":" + line + ")", msg);
+        Log.e("0==|======> (" + fn + ":" + line + ")", msg.toString());
     }
 }

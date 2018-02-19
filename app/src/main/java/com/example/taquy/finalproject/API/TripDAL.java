@@ -55,9 +55,9 @@ public class TripDAL extends DAL<Trip> {
 
     @Override
     public void makeResponse(Object object) {
+        Debugger.log(cmd);
         this.responseVal = object;
         if (object == null) return;
-//        Debugger.log(this.getClass(), 51, requestUrl);
         switch (cmd) {
             case CMD_ALL_TRIPS:
             case CMD_DRIVER_TRIPS:
