@@ -15,6 +15,10 @@ public class Trip {
     private String description;
     private int status;
 
+    public static final int OPENED = 0;
+    public static final int CLOSED = 1;
+    public static final int PAUSED = 2;
+
     public Trip() {
         driver = new User();
         passenger = new User();

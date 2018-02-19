@@ -47,11 +47,10 @@ public class TripDAL extends DAL<Trip> {
     @Override
     public void makeResponse(Object object) {
         if (object == null) return;
-//        ArrayList<JSONObject> objects = (ArrayList<JSONObject>) object;
-//        Log.v("result", objects.size() + "");
-//        ArrayList<Trip> trips = parseJsonList((ArrayList<JSONObject>) object);
-//        GridView gridView = root.findViewById(R.id.ctn_trip_list);
-//        gridView.setAdapter(new PassengerRecordAdapter(root, trips));
+        ArrayList<JSONObject> objects = (ArrayList<JSONObject>) object;
+        ArrayList<Trip> trips = parseJsonList((ArrayList<JSONObject>) object);
+        GridView gridView = root.findViewById(R.id.ctn_trip_list);
+        gridView.setAdapter(new PassengerRecordAdapter(root, trips));
     }
 
     // Others

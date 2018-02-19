@@ -113,7 +113,6 @@ public class Axios extends AsyncTask<String, Void, String> {
     }
 
     protected void onPostExecute(String json) {
-//        Log.v("Response: ", json);
         switch (requestType) {
             case MULTIPLE_DATA:
                 dal.makeResponse(parseMultiple(json));
@@ -161,15 +160,13 @@ public class Axios extends AsyncTask<String, Void, String> {
     private Object parseMultiple(String json) {
         if (json == null) return null;
         try {
-            JSONArray list = new JSONArray(json);
-            ArrayList<JSONObject> objects = new ArrayList<>();
-
-            for (int i = 0; i < list.length(); i++) {
-                JSONObject item = list.getJSONObject(i);
-                objects.add(item);
+            ArrayList<JSONObject> items = new ArrayList<>();
+            JSONArray array = new JSONArray(json);
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject item = array.getJSONObject(i);
+                items.add(item);
             }
-
-            return objects;
+            return items;
         } catch (Exception e) {
             e.printStackTrace();
         }
