@@ -16,8 +16,6 @@ import java.util.ArrayList;
 public class TripDAL extends DAL<Trip> {
     private String uri = SERVER_NAME + "trip/";
 
-    private int cmd = -1;
-
     public static final int CMD_DRIVER_TRIPS = 0;
     public static final int CMD_PASSENGER_TRIPS = 1;
     public static final int CMD_ALL_TRIPS = 2;
@@ -31,20 +29,29 @@ public class TripDAL extends DAL<Trip> {
     // Requests
     @Override
     public void makeRequest(Object object) {
+        switch (cmd) {
+            case CMD_ALL_TRIPS:
+                new Axios(this, Axios.MULTIPLE_DATA).execute(uri);
+                break;
+            case CMD_DRIVER_TRIPS:
 
-    }
+                break;
+            case CMD_PASSENGER_TRIPS:
 
-    public void listAll() throws Exception {
-        new Axios(this).execute(uri);
+                break;
+        }
     }
 
     // Responses
 
     @Override
     public void makeResponse(Object object) {
-        ArrayList<Trip> trips = parseJsonList((ArrayList<JSONObject>) object);
-        GridView gridView = root.findViewById(R.id.ctn_trip_list);
-        gridView.setAdapter(new PassengerRecordAdapter(root, trips));
+        if (object == null) return;
+//        ArrayList<JSONObject> objects = (ArrayList<JSONObject>) object;
+//        Log.v("result", objects.size() + "");
+//        ArrayList<Trip> trips = parseJsonList((ArrayList<JSONObject>) object);
+//        GridView gridView = root.findViewById(R.id.ctn_trip_list);
+//        gridView.setAdapter(new PassengerRecordAdapter(root, trips));
     }
 
     // Others

@@ -72,12 +72,13 @@ public class Axios extends AsyncTask<String, Void, String> {
         try {
             url = new URL(params[0]);
 
-            JSONObject json = new JSONObject(params[1]);
+            JSONObject json = null;
+            if (params.length > 1) json = new JSONObject(params[1]);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(15000);
             conn.setConnectTimeout(15000);
-            conn.setRequestMethod("POST");
+            conn.setRequestMethod(methods[requestMethod]);
             conn.setDoInput(true);
             conn.setDoOutput(true);
 
@@ -106,7 +107,7 @@ public class Axios extends AsyncTask<String, Void, String> {
                 return sb.toString();
             }
         } catch (Exception e) {
-            Log.e("Error", e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
@@ -124,6 +125,8 @@ public class Axios extends AsyncTask<String, Void, String> {
     }
 
     private String queryBuilder(JSONObject params) throws Exception {
+        if (params == null) return "";
+
         StringBuilder result = new StringBuilder();
         boolean first = true;
 
@@ -146,15 +149,17 @@ public class Axios extends AsyncTask<String, Void, String> {
     }
 
     private Object parseSingle(String json) {
+        if (json == null) return null;
         try {
             return new JSONObject(json);
         } catch (Exception e) {
-            Log.e(Log.ERROR + "", e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
 
     private Object parseMultiple(String json) {
+        if (json == null) return null;
         try {
             JSONArray list = new JSONArray(json);
             ArrayList<JSONObject> objects = new ArrayList<>();
@@ -166,7 +171,7 @@ public class Axios extends AsyncTask<String, Void, String> {
 
             return objects;
         } catch (Exception e) {
-            Log.e(Log.ERROR + "", e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
