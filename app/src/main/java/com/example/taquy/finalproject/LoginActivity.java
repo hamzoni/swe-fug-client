@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -64,12 +65,29 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         root = getWindow().getDecorView().getRootView();
 
-//        development();
+        autoFillData();
+        development();
+    }
+
+    private void autoFillData() {
+        try {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle == null) return;
+
+            String datas = bundle.getString("auto-fill-data");
+            if (datas == null) return;
+
+            JSONObject data = new JSONObject(datas);
+            ipt_login.setText(data.getString("email"));
+            ipt_pwd.setText(data.getString("pwd"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void development() {
         // testing
-        ipt_login.setText("doyle.leola@example.net");
+        ipt_login.setText("secret");
         ipt_pwd.setText("secret");
         this.actionSubmit();
     }

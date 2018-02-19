@@ -7,6 +7,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.taquy.finalproject.API.UserDAL;
+import com.example.taquy.finalproject.Entities.User;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText ipt_email;
@@ -15,6 +21,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText ipt_password;
     private EditText ipt_retypepwd;
     private Button btn_submit;
+
+    private View root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +37,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         btn_submit = findViewById(R.id.btn_submit);
 
         btn_submit.setOnClickListener(this);
+
+        root = getWindow().getDecorView().getRootView();
 
         development();
     }
@@ -71,5 +81,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
 
         // submit registration form to server
+        JSONObject params = new JSONObject();
+        try {
+            params.put("email", email);
+            params.put("name", name);
+            params.put("phone", phone);
+            params.put("pwd", pwd);
+            new UserDAL(root, UserDAL.CMD_REGISTRATION).makeRequest(params.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
