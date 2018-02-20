@@ -24,20 +24,28 @@ public class Tool {
         return image;
     }
 
-    public static String dateToString(Date date, String format) {
-        if (format == null) format= "HH:mm:ss dd/MM/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
+    public static String humanfmt = "HH:mm:ss dd-MM-yyyy";
+    public static String sqlfmt = "yyyy-MM-dd HH:mm:ss";
+
+    public static String dateToString(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat(humanfmt);
         return sdf.format(date);
     }
 
-    public static String dateToString(Date date) {
-        String format = "HH:mm:ss dd/MM/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
+    // turn from date to sql format
+    public static String dateToString2(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat(sqlfmt);
         return sdf.format(date);
+    }
+
+    // turn from human readable date string to date
+    public static Date stringToDate2(String date) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat(humanfmt);
+        return formatter.parse(date);
     }
 
     public static Date stringToDate(String date) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat(sqlfmt);
         return formatter.parse(date);
     }
 }

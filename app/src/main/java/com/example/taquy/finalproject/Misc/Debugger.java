@@ -8,6 +8,8 @@ import android.util.Log;
 
 public class Debugger {
     public static void log(Object msg) {
+        if (msg == null) return;
+
         StackTraceElement trace = Thread.currentThread().getStackTrace()[3]; // parent trace
         String fn = trace.getFileName();
         int line = trace.getLineNumber();

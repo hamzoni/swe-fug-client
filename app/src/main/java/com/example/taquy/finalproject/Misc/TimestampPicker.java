@@ -54,18 +54,18 @@ public class TimestampPicker {
     private void timepicker(){
         // Preset time for time picker
         final Calendar c = Calendar.getInstance();
-        int nowHours = c.get(Calendar.HOUR_OF_DAY);
-        int nowMinutes = c.get(Calendar.MINUTE);
+        int h = c.get(Calendar.HOUR_OF_DAY);
+        int m = c.get(Calendar.MINUTE);
 
         // Attach event listener for time picker
         TimePickerDialog picker = new TimePickerDialog(ctx,
             new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int h, int m) {
-                    time =  h + ":" + m;
-                    ipt.setText(date + " " + time);
+                    time =  h + ":" + m + ":" + c.get(Calendar.SECOND);
+                    ipt.setText(time + " " + date);
                 }
-            }, nowHours, nowMinutes, false);
+            }, h, m,false);
 
         // Show time picker dialog
         picker.show();

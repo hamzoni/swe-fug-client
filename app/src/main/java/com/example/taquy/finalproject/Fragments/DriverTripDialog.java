@@ -16,13 +16,17 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.taquy.finalproject.Entities.Trip;
 import com.example.taquy.finalproject.Misc.TimestampPicker;
+import com.example.taquy.finalproject.Misc.Tool;
 import com.example.taquy.finalproject.R;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -100,14 +104,21 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
+    public void onClick(View view) {
+        EditText ipt = v.findViewById(R.id.txt_time);
+        switch (view.getId()) {
             case R.id.txt_time:
-                EditText ipt = v.findViewById(R.id.txt_time);
                 new TimestampPicker(getContext(), ipt).show();
                 break;
             case R.id.btn_submit:
-
+                try {
+                    Date date = Tool.stringToDate2(ipt.getText().toString());
+                    String sqltime = Tool.dateToString2(date);
+                    Toast.makeText(getContext(), sqltime, Toast.LENGTH_LONG).show();
+                } catch (ParseException e) {
+                    Toast.makeText(getContext(), "Wrong date time format", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
                 break;
             case R.id.btn_close:
                 closeDialog();
