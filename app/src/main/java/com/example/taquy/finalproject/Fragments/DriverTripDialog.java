@@ -7,12 +7,17 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.taquy.finalproject.Entities.Trip;
 import com.example.taquy.finalproject.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by taquy on 2/20/2018.
@@ -56,8 +61,22 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
         ipt = v.findViewById(R.id.txt_time);
         ipt.setText(trip.getTimeDisplay());
 
-        ipt = v.findViewById(R.id.txt_status);
-        ipt.setText(trip.getStatus());
+
+        Spinner spn;
+        spn = v.findViewById(R.id.txt_status);
+
+        // Spinner Status
+        List<String> items = new ArrayList<String>();
+        items.add(Trip.STATUS[0].getName());
+        items.add(Trip.STATUS[1].getName());
+        items.add(Trip.STATUS[2].getName());
+
+        int spnLayout = R.layout.support_simple_spinner_dropdown_item;
+        ArrayAdapter<String> spnAdapter = new ArrayAdapter<String>(getContext(), spnLayout, items);
+        spn.setAdapter(spnAdapter);
+
+        spn.setSelection(trip.getStatus());
+        //
 
         ipt = v.findViewById(R.id.txt_description);
         ipt.setText(trip.getDescription());
@@ -80,9 +99,6 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_status:
-
-                break;
             case R.id.btn_submit:
 
                 break;

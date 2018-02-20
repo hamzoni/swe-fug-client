@@ -20,6 +20,38 @@ public class Trip implements Serializable {
     public static final int CLOSED = 1; // the trip is not available due to over date or closed by driver
     public static final int PAUSED = 2; // the trip is still valid (date) but is temporarily hide by driver
 
+    public static final Status[] STATUS = new Status[] {
+        new Status(OPENED, "Open"),
+        new Status(CLOSED, "Close"),
+        new Status(PAUSED, "Pause")
+    };
+
+    public static class Status {
+        private int id;
+        private String name;
+
+        public Status(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
     public Trip() {
         driver = new User();
         passenger = new User();

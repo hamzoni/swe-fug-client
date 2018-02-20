@@ -91,13 +91,13 @@
                 android:layout_height="wrap_content"
                 android:text="Status" />
 
-            <EditText
+
+            <Spinner
                 android:id="@+id/txt_status"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:layout_weight="2"
-                android:inputType="textPersonName"/>
+                android:ems="10" />
         </TableRow>
 
     </TableLayout>
@@ -120,14 +120,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
-
-        <ToggleButton
-            android:id="@+id/btn_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textOff="enable"
-            android:textOn="disable" />
 
         <Button
             android:id="@+id/btn_submit"
