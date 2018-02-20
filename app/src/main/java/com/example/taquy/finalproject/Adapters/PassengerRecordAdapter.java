@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * Created by taquy on 2/18/2018.
  */
 
-public class PassengerRecordAdapter  extends BaseAdapter {
+public class PassengerRecordAdapter extends BaseAdapter {
 
     private View view;
     private Context ctx;
@@ -87,5 +87,29 @@ public class PassengerRecordAdapter  extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return records.get(position).getId();
+    }
+
+    public View getView() {
+        return view;
+    }
+
+    public void setView(View view) {
+        this.view = view;
+    }
+
+    public Context getCtx() {
+        return ctx;
+    }
+
+    public void setCtx(Context ctx) {
+        this.ctx = ctx;
+    }
+
+    public ArrayList<Trip> getRecords() {
+        return records;
+    }
+
+    public void setRecords(ArrayList<Trip> records) {
+        this.records = records;
     }
 }

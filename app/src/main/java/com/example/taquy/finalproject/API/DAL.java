@@ -17,10 +17,10 @@ public abstract class DAL<T> implements DALi {
     protected int cmd = -1;
 
     public static String[] addresses = new String[] {
+            "192.168.9.121",        // Highland Caffe N4
             "192.168.100.12",       // Home
             "10.10.24.134",         // Highland Caffe Vin
             "192.168.8.96",         // Highland Caffe Dolphin
-            "192.168.100.12",       // Highland Caffe Ham Nghi
     };
 
     protected DAL(Object... args) {
