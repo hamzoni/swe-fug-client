@@ -1,8 +1,12 @@
 package com.example.taquy.finalproject.API;
 
+import android.os.Debug;
 import android.util.Log;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 
+import com.example.taquy.finalproject.Adapters.DriverRecordAdapter;
 import com.example.taquy.finalproject.Entities.Trip;
 import com.example.taquy.finalproject.Misc.Debugger;
 import com.example.taquy.finalproject.Misc.Tool;
@@ -63,7 +67,11 @@ public class TripDAL extends DAL<Trip> {
                 ArrayList<JSONObject> objects = (ArrayList<JSONObject>) object;
                 ArrayList<Trip> trips = parseJsonList((ArrayList<JSONObject>) object);
                 GridView gridView = root.findViewById(R.id.ctn_trip_list);
-                gridView.setAdapter(new PassengerRecordAdapter(root, trips));
+
+                BaseAdapter adapter = new PassengerRecordAdapter(root, trips);
+                if (cmd == CMD_DRIVER_TRIPS) adapter = new DriverRecordAdapter(root, trips);
+
+                gridView.setAdapter(adapter);
                 break;
         }
     }

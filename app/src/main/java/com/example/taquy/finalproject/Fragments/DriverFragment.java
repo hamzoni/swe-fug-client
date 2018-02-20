@@ -8,10 +8,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 
 import com.example.taquy.finalproject.API.TripDAL;
+import com.example.taquy.finalproject.Entities.Trip;
 import com.example.taquy.finalproject.Entities.User;
 import com.example.taquy.finalproject.Misc.Authentication;
 import com.example.taquy.finalproject.Misc.Debugger;
@@ -51,6 +53,20 @@ public class DriverFragment extends Fragment {
 
     private void attachEvent() {
         GridView gridView = root.findViewById(R.id.ctn_trip_list);
+
+        // show detail dialog when passenger click on a trip record
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Trip trip = (Trip) parent.getItemAtPosition(position);
+                DriverTripDialog dialog = new DriverTripDialog();
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("trip", trip);
+                dialog.setArguments(bundle);
+                dialog.show(getFragmentManager(), "Hello world");
+            }
+        });
     }
 
     private void loadData() {
@@ -61,7 +77,7 @@ public class DriverFragment extends Fragment {
             User user = auth.retrieve();
 
             JSONObject params = new JSONObject();
-            params.put("email", user.getEmail());
+            params.put("login", user.getEmail());
             params.put("pwd", user.getPassword());
             new TripDAL(root, TripDAL.CMD_DRIVER_TRIPS).makeRequest(params.toString());
 

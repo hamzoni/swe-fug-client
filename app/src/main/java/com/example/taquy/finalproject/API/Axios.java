@@ -75,7 +75,9 @@ public class Axios extends AsyncTask<String, Void, String> {
             url = new URL(params[0]);
 
             JSONObject json = null;
-            if (params.length > 1) json = new JSONObject(params[1]);
+            if (params.length > 1) {
+                json = new JSONObject(params[1]);
+            }
 
             conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(15000);

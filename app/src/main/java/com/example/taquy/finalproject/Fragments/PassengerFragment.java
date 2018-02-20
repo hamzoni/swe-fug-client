@@ -1,8 +1,6 @@
 package com.example.taquy.finalproject.Fragments;
 
 
-import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +12,6 @@ import android.widget.Button;
 import android.widget.GridView;
 
 import com.example.taquy.finalproject.API.TripDAL;
-import com.example.taquy.finalproject.Adapters.PassengerRecordAdapter;
 import com.example.taquy.finalproject.Entities.Trip;
 import com.example.taquy.finalproject.Entities.User;
 import com.example.taquy.finalproject.Misc.Authentication;
