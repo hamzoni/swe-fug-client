@@ -1,7 +1,9 @@
 package com.example.taquy.finalproject.Fragments;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -9,14 +11,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.taquy.finalproject.Entities.Trip;
+import com.example.taquy.finalproject.Misc.TimestampPicker;
 import com.example.taquy.finalproject.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -60,7 +66,7 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
 
         ipt = v.findViewById(R.id.txt_time);
         ipt.setText(trip.getTimeDisplay());
-
+        ipt.setOnClickListener(this);
 
         Spinner spn;
         spn = v.findViewById(R.id.txt_status);
@@ -81,9 +87,6 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
         ipt = v.findViewById(R.id.txt_description);
         ipt.setText(trip.getDescription());
 
-        btn = v.findViewById(R.id.btn_status);
-        btn.setOnClickListener(this);
-
         btn = v.findViewById(R.id.btn_submit);
         btn.setOnClickListener(this);
 
@@ -99,6 +102,10 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.txt_time:
+                EditText ipt = v.findViewById(R.id.txt_time);
+                new TimestampPicker(getContext(), ipt).show();
+                break;
             case R.id.btn_submit:
 
                 break;
@@ -107,4 +114,6 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
                 break;
         }
     }
+
+
 }
