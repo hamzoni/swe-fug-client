@@ -19,6 +19,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.taquy.finalproject.Entities.Trip;
+import com.example.taquy.finalproject.Misc.Debugger;
 import com.example.taquy.finalproject.Misc.TimestampPicker;
 import com.example.taquy.finalproject.Misc.Tool;
 import com.example.taquy.finalproject.R;
@@ -53,24 +54,30 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
         return builder.create();
     }
 
+    private EditText ipt_from;
+    private EditText ipt_to;
+    private EditText ipt_price;
+    private EditText ipt_time;
+    private EditText ipt_description;
+
     private void fillContent() {
         Bundle bundle = this.getArguments();
         trip = (Trip) bundle.getSerializable("trip");
         Button btn;
-        EditText ipt;
 
-        ipt = v.findViewById(R.id.txt_from);
-        ipt.setText(trip.getFrom());
 
-        ipt = v.findViewById(R.id.txt_to);
-        ipt.setText(trip.getTo());
+        ipt_from = v.findViewById(R.id.txt_from);
+        ipt_from.setText(trip.getFrom());
 
-        ipt = v.findViewById(R.id.txt_price);
-        ipt.setText(trip.getPriceDisplay());
+        ipt_to = v.findViewById(R.id.txt_to);
+        ipt_to.setText(trip.getTo());
 
-        ipt = v.findViewById(R.id.txt_time);
-        ipt.setText(trip.getTimeDisplay());
-        ipt.setOnClickListener(this);
+        ipt_price = v.findViewById(R.id.txt_price);
+        ipt_price.setText(trip.getPriceDisplay());
+
+        ipt_time = v.findViewById(R.id.txt_time);
+        ipt_time.setText(trip.getTimeDisplay());
+        ipt_time.setOnClickListener(this);
 
         Spinner spn;
         spn = v.findViewById(R.id.txt_status);
@@ -88,8 +95,8 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
         spn.setSelection(trip.getStatus());
         //
 
-        ipt = v.findViewById(R.id.txt_description);
-        ipt.setText(trip.getDescription());
+        ipt_description = v.findViewById(R.id.txt_description);
+        ipt_description.setText(trip.getDescription());
 
         btn = v.findViewById(R.id.btn_submit);
         btn.setOnClickListener(this);
@@ -105,16 +112,18 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        EditText ipt = v.findViewById(R.id.txt_time);
         switch (view.getId()) {
             case R.id.txt_time:
-                new TimestampPicker(getContext(), ipt).show();
+                new TimestampPicker(getContext(), ipt_time).show();
                 break;
             case R.id.btn_submit:
                 try {
-                    Date date = Tool.stringToDate2(ipt.getText().toString());
+                    Date date = Tool.stringToDate2(ipt_time.getText().toString());
                     String sqltime = Tool.dateToString2(date);
-                    Toast.makeText(getContext(), sqltime, Toast.LENGTH_LONG).show();
+
+                    if (validateFormData()) {
+                        
+                    }
                 } catch (ParseException e) {
                     Toast.makeText(getContext(), "Wrong date time format", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
@@ -126,5 +135,38 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
         }
     }
 
+    private boolean validateFormData() {
+        String errorMsg = "";
 
+        String from = ipt_from.getText().toString();
+        if (from != null) from = from.trim();
+
+        String to = ipt_to.getText().toString();
+        if (to != null) to = to.trim();
+
+        String price = ipt_price.getText().toString();
+
+        // from, to must not be empty
+        boolean c3 = from.length() != 0 && to.length() != 0;
+        if (!c3) errorMsg += "from, to must not be empty\n";
+
+        // from and to must not matched
+        boolean c1 = !from.equals(to);
+        if (!c1) errorMsg += "from and to must not matched\n";
+
+        // price must contains only digits
+        boolean c2 = true;
+        try {
+            Double.parseDouble(price);
+        } catch (Exception e) {
+            c2 = false;
+            e.printStackTrace();
+        }
+        if (!c2) errorMsg += "price must contains only digits";
+
+        if (!(c1 && c2 && c3)) {
+            Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
+        }
+        return (c1 && c2 && c3);
+    }
 }
