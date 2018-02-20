@@ -55,8 +55,11 @@ public class PassengerFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Trip trip = (Trip) parent.getItemAtPosition(position);
                 PassengerTripDialog dialog = new PassengerTripDialog();
-                FragmentManager manager = dialog.getManager();
-                dialog.show(manager, "Hello world");
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("trip", trip);
+                dialog.setArguments(bundle);
+                dialog.show(getFragmentManager(), "Hello world");
             }
         });
     }

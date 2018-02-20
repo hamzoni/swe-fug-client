@@ -103,7 +103,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textMultiLine" />
+        android:inputType="none|textMultiLine" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -111,21 +111,21 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/btn_booking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Book" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btn_call_driver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="(012) 345 67891" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btn_close_dialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

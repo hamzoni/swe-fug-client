@@ -1,6 +1,8 @@
 package com.example.taquy.finalproject.Entities;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private int id;
     private String avatar;
     private String email;
@@ -17,6 +19,10 @@ public class User {
         phone = "N/A";
         brand = "N/A";
         plate = "N/A";
+    }
+
+    public String getBikeInfo() {
+        return brand + " (" + plate + ")";
     }
 
     public int getId() {

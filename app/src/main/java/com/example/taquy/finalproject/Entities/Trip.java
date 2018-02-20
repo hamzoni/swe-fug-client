@@ -2,9 +2,10 @@ package com.example.taquy.finalproject.Entities;
 
 import com.example.taquy.finalproject.Misc.Tool;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Trip {
+public class Trip implements Serializable {
     private int id;
     private User driver;
     private User passenger;
