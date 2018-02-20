@@ -15,9 +15,9 @@ public class Trip {
     private String description;
     private int status;
 
-    public static final int OPENED = 0;
-    public static final int CLOSED = 1;
-    public static final int PAUSED = 2;
+    public static final int OPENED = 0; // the trip is available and ready to serve
+    public static final int CLOSED = 1; // the trip is not available due to over date or closed by driver
+    public static final int PAUSED = 2; // the trip is still valid (date) but is temporarily hide by driver
 
     public Trip() {
         driver = new User();
