@@ -1,5 +1,6 @@
 package com.example.taquy.finalproject.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -18,11 +19,15 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.taquy.finalproject.API.TripDAL;
 import com.example.taquy.finalproject.Entities.Trip;
 import com.example.taquy.finalproject.Misc.Debugger;
 import com.example.taquy.finalproject.Misc.TimestampPicker;
 import com.example.taquy.finalproject.Misc.Tool;
 import com.example.taquy.finalproject.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -36,8 +41,30 @@ import java.util.List;
 
 public class DriverTripDialog extends DialogFragment implements View.OnClickListener {
 
+    // View dialog
     private View v;
+    // View container (where dialog is called)
+    private View vc;
+
     private Trip trip;
+
+    private EditText ipt_from;
+    private EditText ipt_to;
+    private EditText ipt_price;
+    private EditText ipt_time;
+    private EditText ipt_description;
+
+    private Button btn_submit;
+    private Button btn_close;
+
+    private Spinner spn;
+
+    public DriverTripDialog() {}
+
+    @SuppressLint("ValidFragment")
+    public DriverTripDialog(View vc) {
+        this.vc = vc;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -47,39 +74,59 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
 
         builder.setView(v);
 
+        Bundle bundle = this.getArguments();
+        trip = (Trip) bundle.getSerializable("trip");
+
+        // attach element to global variables
         // set events listeners
         // fill dialog values
+        setElements(); // this always goes first
+        setEvents();
         fillContent();
 
         return builder.create();
     }
 
-    private EditText ipt_from;
-    private EditText ipt_to;
-    private EditText ipt_price;
-    private EditText ipt_time;
-    private EditText ipt_description;
-
-    private void fillContent() {
-        Bundle bundle = this.getArguments();
-        trip = (Trip) bundle.getSerializable("trip");
-        Button btn;
-
+    private void setElements() {
+        btn_submit = v.findViewById(R.id.btn_submit);
+        btn_close = v.findViewById(R.id.btn_close);
 
         ipt_from = v.findViewById(R.id.txt_from);
-        ipt_from.setText(trip.getFrom());
-
         ipt_to = v.findViewById(R.id.txt_to);
+        ipt_price = v.findViewById(R.id.txt_price);
+        ipt_time = v.findViewById(R.id.txt_time);
+        ipt_description = v.findViewById(R.id.txt_description);
+    }
+
+    private void setEvents() {
+        btn_submit.setOnClickListener(this);
+        btn_close.setOnClickListener(this);
+        ipt_time.setOnClickListener(this);
+    }
+
+    private void fillContent() {
+        // Fill static data
+        setSpinner();
+
+        // Fill dynamic data
+
+        if (trip == null) {
+            btn_submit.setText("Create");
+            return;
+        }
+
+        ipt_from.setText(trip.getFrom());
         ipt_to.setText(trip.getTo());
 
-        ipt_price = v.findViewById(R.id.txt_price);
-        ipt_price.setText(trip.getPriceDisplay());
+        String price = trip.getPrice() != null ? "" + trip.getPrice() : "";
+        ipt_price.setText(price);
 
-        ipt_time = v.findViewById(R.id.txt_time);
         ipt_time.setText(trip.getTimeDisplay());
-        ipt_time.setOnClickListener(this);
+        ipt_description.setText(trip.getDescription());
+        spn.setSelection(trip.getStatus());
+    }
 
-        Spinner spn;
+    private void setSpinner() {
         spn = v.findViewById(R.id.txt_status);
 
         // Spinner Status
@@ -91,19 +138,6 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
         int spnLayout = R.layout.support_simple_spinner_dropdown_item;
         ArrayAdapter<String> spnAdapter = new ArrayAdapter<String>(getContext(), spnLayout, items);
         spn.setAdapter(spnAdapter);
-
-        spn.setSelection(trip.getStatus());
-        //
-
-        ipt_description = v.findViewById(R.id.txt_description);
-        ipt_description.setText(trip.getDescription());
-
-        btn = v.findViewById(R.id.btn_submit);
-        btn.setOnClickListener(this);
-
-        btn = v.findViewById(R.id.btn_close);
-        btn.setOnClickListener(this);
-
     }
 
     public void closeDialog() {
@@ -119,13 +153,36 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
             case R.id.btn_submit:
                 try {
                     Date date = Tool.stringToDate2(ipt_time.getText().toString());
-                    String sqltime = Tool.dateToString2(date);
-
                     if (validateFormData()) {
-                        
+                        // send trip data to server to update
+                        JSONObject data = new JSONObject();
+
+                        String time = Tool.dateToString2(date);
+                        String description = ipt_description.getText().toString();
+                        String from = ipt_from.getText().toString();
+                        String to = ipt_to.getText().toString();
+                        String price = ipt_price.getText().toString();
+                        String status = spn.getSelectedItemPosition() + "";
+
+                        data.put("id", trip.getId());
+                        data.put("from", from);
+                        data.put("to", to);
+                        data.put("price", Double.parseDouble(price));
+                        data.put("description", description);
+                        data.put("time", time);
+                        data.put("from", from);
+                        data.put("status", status);
+
+                        int cmd = TripDAL.CMD_UPDATE_OWNED_TRIP;
+                        if (trip == null) cmd = TripDAL.CMD_CREATE_OWNED_TRIP;
+
+                        new TripDAL(v, cmd, vc).makeRequest(data.toString());
+                        closeDialog();
                     }
                 } catch (ParseException e) {
                     Toast.makeText(getContext(), "Wrong date time format", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 break;
@@ -157,7 +214,11 @@ public class DriverTripDialog extends DialogFragment implements View.OnClickList
         // price must contains only digits
         boolean c2 = true;
         try {
-            Double.parseDouble(price);
+            if (price.trim().length() == 0)  {
+                ipt_price.setText("0");
+            } else {
+                Double.parseDouble(price);
+            }
         } catch (Exception e) {
             c2 = false;
             e.printStackTrace();

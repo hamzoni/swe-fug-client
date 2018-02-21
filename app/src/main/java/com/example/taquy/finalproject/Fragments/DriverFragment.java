@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
-public class DriverFragment extends Fragment {
+public class DriverFragment extends Fragment implements  View.OnClickListener {
 
     private Context ctx;
     private View root;
@@ -43,7 +43,7 @@ public class DriverFragment extends Fragment {
         this.ctx = root.getContext();
 
         this.btn_trip = root.findViewById(R.id.btn_trip);
-        this.btn_trip.setOnClickListener(new BtnCreateTrip());
+        this.btn_trip.setOnClickListener(this);
 
         loadData();
         attachEvent();
@@ -59,40 +59,33 @@ public class DriverFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Trip trip = (Trip) parent.getItemAtPosition(position);
-                DriverTripDialog dialog = new DriverTripDialog();
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("trip", trip);
-                dialog.setArguments(bundle);
-                dialog.show(getFragmentManager(), "Hello world");
+                showDialog(trip);
             }
         });
     }
 
-    private void loadData() {
-        try {
-            Authentication auth = new Authentication(ctx);
+    private void showDialog(Trip trip) {
+        DriverTripDialog dialog = new DriverTripDialog(root);
+        // send value to dialog
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("trip", trip);
+        dialog.setArguments(bundle);
 
-            if (!auth.isAuth()) return;
-            User user = auth.retrieve();
-
-            JSONObject params = new JSONObject();
-            params.put("login", user.getEmail());
-            params.put("pwd", user.getPassword());
-            new TripDAL(root, TripDAL.CMD_DRIVER_TRIPS).makeRequest(params.toString());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // show dialog
+        dialog.show(getFragmentManager(), "Hello world");
     }
 
-    class BtnCreateTrip implements View.OnClickListener {
+    private void loadData() {
+            new TripDAL(root, TripDAL.CMD_DRIVER_TRIPS).makeRequest("");
+    }
 
-        @Override
-        public void onClick(View view) {
-
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_trip:
+                showDialog(null);
+                break;
         }
-
     }
 
 }

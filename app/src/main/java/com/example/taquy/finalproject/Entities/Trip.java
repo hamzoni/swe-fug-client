@@ -122,8 +122,8 @@ public class Trip implements Serializable {
     }
 
     public String getPriceDisplay() {
-        double price = getPrice();
-        if (price == 0) return "Free";
+        if (getPrice() == null) return "Free";
+        if (getPrice() <= 0) return "Free";
         return price + "";
     }
 

@@ -14,6 +14,7 @@ import org.json.JSONTokener;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -71,6 +72,8 @@ public class Axios extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params)  {
         URL url = null; // here is your URL path
         HttpURLConnection conn = null;
+        String method = methods[requestMethod];
+
         try {
             url = new URL(params[0]);
 
@@ -82,19 +85,23 @@ public class Axios extends AsyncTask<String, Void, String> {
             conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(15000);
             conn.setConnectTimeout(15000);
-            conn.setRequestMethod(methods[requestMethod]);
+            conn.setRequestMethod(method);
             conn.setDoInput(true);
 
             if (requestMethod != Axios.GET) {
                 conn.setDoOutput(true);
 
                 OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                OutputStreamWriter ow = new OutputStreamWriter(os, "UTF-8");
+
+                BufferedWriter writer = new BufferedWriter(ow);
                 writer.write(queryBuilder(json));
 
                 writer.flush();
                 writer.close();
+                ow.close();
                 os.close();
+
             } else {
                 conn.setDoOutput(false);
             }
@@ -103,8 +110,9 @@ public class Axios extends AsyncTask<String, Void, String> {
 
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpsURLConnection.HTTP_OK) {
-                InputStreamReader is = new InputStreamReader(conn.getInputStream());
-                BufferedReader in = new BufferedReader(is);
+                InputStream is = conn.getInputStream();
+                InputStreamReader ir = new InputStreamReader(is);
+                BufferedReader in = new BufferedReader(ir);
 
                 StringBuffer sb = new StringBuffer("");
                 String line = "";
@@ -115,9 +123,11 @@ public class Axios extends AsyncTask<String, Void, String> {
                 }
 
                 in.close();
+                ir.close();
                 is.close();
 
-                return sb.toString();
+                String result = sb.toString();
+                return result;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -129,13 +139,17 @@ public class Axios extends AsyncTask<String, Void, String> {
     }
 
     protected void onPostExecute(String json) {
-        switch (requestType) {
-            case MULTIPLE_DATA:
-                dal.makeResponse(parseMultiple(json));
-                break;
-            case SINGLE_DATA:
-                dal.makeResponse(parseSingle(json));
-                break;
+        try {
+            switch (requestType) {
+                case MULTIPLE_DATA:
+                        dal.makeResponse(parseMultiple(json));
+                    break;
+                case SINGLE_DATA:
+                    dal.makeResponse(parseSingle(json));
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
